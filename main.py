@@ -6,15 +6,15 @@ import datetime
 import openai
 from config import apikey
 from config import wa_path
+from commands import songs
+from commands import sites
 speaker = win32com.client.Dispatch("SAPI.SpVoice")
 
 speaker.Speak("Hello sir! I am Jarvis")
 
 chatStr = ""
 
-
-
-# Under Process 
+# This Feature is under development
 
 # def chat(text):
 #     global chatStr
@@ -58,18 +58,17 @@ chatStr = ""
 #     except:
 #         print("An error occurred")
 
-
-
 def listen():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Say something!")
         audio = r.listen(source)
+        pause_threshold = 0.5
 
     try:
         print("Recognizing...")
         command = r.recognize_google(audio, language='en-in')
-        print(f"You said: {command}")
+        print(f"User: {command}")
         return command
     except sr.UnknownValueError:
         print("Google Speech Recognition could not understand audio")
@@ -78,58 +77,54 @@ def listen():
 
 while True:
     text = listen()
-    sites = [
-        ["youtube", "https://www.youtube.com"], 
-        ["spotify", "https://www.spotify.com"], 
-        ["google", "https://www.google.com"], 
-        ["facebook", "https://www.facebook.com"], 
-        ["twitter", "https://www.twitter.com"], 
-        ["instagram", "https://www.instagram.com"], 
-        ["linkedin", "https://www.linkedin.com"], 
-        ["github", "https://www.github.com"], 
-        ["stackoverflow", "https://www.stackoverflow.com"]
-    ]
+    try:
+        
+        for site in sites:
+            if site[0].lower() in text.lower():
+                speaker.Speak(f"Opening {site[0]} sir")
+                webbrowser.open(site[1])
+                break
 
-    for site in sites:
-        if site[0] in text.lower():
-            speaker.Speak(f"Opening {site[0]} sir")
-            webbrowser.open(site[1])
+        for music in songs:
+            if music[0].lower() in text.lower():
+                speaker.Speak(f"Playing {music[0]} sir")
+                os.startfile(music[1])
+                break
+
+        if "music" in text.lower():
+            speaker.Speak("Playing Music sir")
+            music = r"C:\Users\devar\Music\Musify\Download\Dil_Chori.mp3"
+            os.startfile(music)
+
+        elif "hello" in text.lower():
+            speaker.Speak("Hello sir")
+
+        elif "your name" in text.lower():
+            speaker.Speak("I am Jarvis, your personal assistant")
+
+        elif "time" in text.lower():
+            now = datetime.datetime.now()
+            time = now.strftime("%I:%M %p")
+            speaker.Speak(f"The time is {time}")
+
+        elif "browser" in text.lower():
+            speaker.Speak("Opening browser sir")
+            browser = r"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Brave.lnk"
+            webbrowser.open(browser)
+
+        elif "WhatsApp" in text:
+            speaker.Speak("Opening WhatsApp sir")
+            os.startfile(wa_path)
+
+        elif "goodbye" in text.lower():
+            speaker.Speak("Goodbye sir! Have a nice day")
             break;
-
-    if "music" in text.lower():
-        speaker.Speak("Opening Music sir")
-        music = r"C:\Users\devar\Music\Musify\Download\Dil_Chori.mp3"
-        os.startfile(music)
-
-    elif "your name" in text.lower():
-        speaker.Speak("I am Jarvis, your personal assistant")
-
-    elif "the time" in text.lower():
-        now = datetime.datetime.now()
-        time = now.strftime("%I:%M %p")
-        speaker.Speak(f"The time is {time}")
-
-    elif "browser" in text.lower():
-        speaker.Speak("Opening browser sir")
-        browser = r"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Brave.lnk"
-        webbrowser.open(browser)
-
-    # elif "using ai" in text.lower():
-    #     AI(prompt=text)
-
-    elif "WhatsApp" in text:
-        speaker.Speak("Opening WhatsApp sir")
-        os.startfile(wa_path)
-
-    elif "exit" in text.lower():
-        speaker.Speak("Goodbye sir")
+        
+        elif "reset" in text.lower():
+            chatStr = ""
+            speaker.Speak("Chat history resetted sucessfully sir")
+        
+    except:
+        speaker.Speak("Pardon sir")
+        print("An error occurred")
         break;
-    
-    elif "reset" in text.lower():
-        chatStr = ""
-        speaker.Speak("Chat history resetted sucessfully sir")
-
-    else:
-        # print("Chatting...")
-        # chat(text)
-        print("Pardon sir")

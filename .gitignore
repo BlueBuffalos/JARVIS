@@ -1,2 +1,5 @@
 OpenAI
 config.py
+music.py
+commands.py
+__pycache__
