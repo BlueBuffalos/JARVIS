@@ -8,6 +8,7 @@ from config import apikey
 from config import wa_path
 from commands import songs
 from commands import sites
+import requests
 speaker = win32com.client.Dispatch("SAPI.SpVoice")
 
 speaker.Speak("Hello sir! I am Jarvis")
@@ -58,6 +59,23 @@ chatStr = ""
 #     except:
 #         print("An error occurred")
 
+
+def getWeather(city):
+    try:
+        key = "c726c328b68da1dd57231b76a50eaf12"
+        api = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={key}"
+        response = requests.get(api)
+        data = response.json()
+        temp = round(data['main']['temp'] - 273.15, 2)
+        print("")
+        print("Name of the city: "+ data['name'])
+        print("Temperature:", temp, "°C")
+        speaker.Speak(f"The temperature in {city} is {temp} degree celsius")
+        print("")
+    except:
+        print("Error: City not found!")
+        speaker.Speak("Cannot find the city sir")
+
 def listen():
     r = sr.Recognizer()
     with sr.Microphone() as source:
@@ -106,6 +124,10 @@ while True:
             now = datetime.datetime.now()
             time = now.strftime("%I:%M %p")
             speaker.Speak(f"The time is {time}")
+
+        elif "weather" in text.lower():
+            speaker.Speak("Can you please tell me the city name sir?")
+            getWeather(city=listen())
 
         elif "browser" in text.lower():
             speaker.Speak("Opening browser sir")
