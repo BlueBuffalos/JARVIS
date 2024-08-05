@@ -6,7 +6,7 @@
 <ul>
     <li>Speech recognition</li>
     <li>Performs assigned tasks</li>
-    <li>Integrated AI (under development)</li>
+    <li>Integrated AI</li>
 </ul>
 
 <font size="2">**Want to use it?**</font>
