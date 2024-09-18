@@ -120,9 +120,10 @@ while True:
             browser = r"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Brave.lnk"
             webbrowser.open(browser)
 
-        elif "whatsapp" in text.lower():
-            speaker.Speak("Opening WhatsApp sir")
-            os.startfile(wa_path)
+        # elif "whatsapp" in text.lower():
+#     speaker.Speak("Opening WhatsApp sir")
+#     os.startfile(wa_path)
+
 
         elif "goodbye" in text.lower() or "exit" in text.lower() or "quit" in text.lower():
             speaker.Speak("Goodbye sir! Have a nice day")
